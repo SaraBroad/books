@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -113,6 +113,192 @@
 // };
 // // 1. Load the JavaScript client library.
 // gapi.load('client', start);
+    </script>
+
+
+</body>
+
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Books List</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://www.google.com/books/jsapi.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Love+Ya+Like+A+Sister|Nanum+Pen+Script" rel="stylesheet">
+    <!-- <link type="text/css" rel="stylesheet" href="CSS/groundwork.css"> -->
+
+     <style>
+        body {
+        margin-left: 10px;
+        } 
+    
+        h2 {
+            margin-left: 25px;
+            font-family: 'Love Ya Like A Sister', cursive;
+        }
+
+        p {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 24px;
+        }
+
+        #book-box, #youngadult-books {
+            margin-left: 15px;
+            
+        }
+
+        button, a, p {
+            float: left;
+            clear: both;
+           display: inline;
+        }
+        /* .button-style {
+            margin-top: 15px;
+        }
+
+        
+
+
+    
+    </style> 
+
+</head>
+
+<body>
+
+
+    <header class="padded">
+        <div class="container">
+            <div class="row">
+                <div class="one half">
+                    <h2 class="logo">
+                        <a href="/" target="_parent">
+                            <img src="images/books logo.jpg" alt="Books for Everyone!!">Books for Everyone!!</a>
+                    </h2>
+                </div>
+                <div class="one half">
+                </div>
+            </div>
+            <nav role="navigation" class="nav gap-top">
+                <ul role="menubar">
+                    <li>
+                        <a href="./home.html">
+                            <i class="icon-home"></i> Home</a>
+                    </li>
+                    <li role="menu">
+                        <button>Community</button>
+                        <ul>
+                            <li>
+                                <a href="bookpage.html">BookList Page</a>
+                            </li>
+                            <li>
+                                <a href="wishlist.html">WishList Page</a>
+                            </li>
+                            <li>
+                                <a href="community.html">Community Page</a>
+                            </li>
+                        </ul>
+                    </li>
+            </nav>
+        </div>
+    </header>
+
+  
+
+     <div class="row"> 
+            <h2>Children's Books</h3>
+            <div id="book-box">
+            </div>
+    </div>
+            
+       <div class="row"> 
+            <h2>Young Adult Books</h3>
+            <div id="youngadult-books">
+            </div>
+        </div>
+            
+    
+    
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            var lccnChildren = ['2005002160', '90040410', '98022578', '93016788', '2006001947', '2006009487', '2014019913', '2005013501', '2011002879', '2016952958', '2017006468', '90021459', '00039103', '2013049031', '2014005767', '2013033662', '97062397', '2017036933'];
+            var YA = ['2014021346', '2016950333', '2016058582', '2015026310', '2017297201', '2013013810', '2009009293', '2011378944', '2011036317', '2017021616', '2017943585', '2017288346', '2017018004', '2016023127', '2016001079', '98040958', '2010007855', '2016022723'];
+            function fetchWithLCCN(lccnList, bookDiv) {
+
+
+                for (var i = 0; i < lccnList.length; i++) {
+                    var queryURL = "https://www.googleapis.com/books/v1/volumes?q=lccn:" + lccnList[i] + "&key=AIzaSyBamc9-YYOwndh6rP8mMu0_XRaHE2URiU8";
+                    $.ajax({
+                        url: queryURL,
+                        method: "GET"
+                    }).then(function (response) {
+                        if (response.totalItems > 0) {
+                            var book = response.items[0];
+                            var div = $('<div>');
+                            div.addClass("col-md-6");
+                            div.css("border", ["10", "solid", "black"])
+                            var title = $("<p>");
+                            // title.attr("book-name");
+                            title.addClass("book-style font-style")
+                            title.append(book.volumeInfo.title);
+                            div.append(title);
+                            var author = $("<p>")
+                            author.text(book.volumeInfo.authors);
+                            author.addClass("book-style font-style");
+                            div.append(author);
+                            console.log(author);
+                            var links = $("<a>");
+                            //append attribute with link
+                            // links.attr("src", book.volumeInfo.infoLink);
+                            links.attr("href", book.volumeInfo.infoLink);
+                            // links.text(book.volumeInfo.infoLink);
+                            links.text("Click here to get more information");
+                            div.append(links);
+                            console.log(links)
+                            var image = $("<img>");
+                            image.attr("src", book.volumeInfo.imageLinks.thumbnail);
+                            div.append(image);
+                            var button = $("<button>");
+                            button.text("Add to Wish List");
+                            button.attr("data-book-name", book.volumeInfo.title);
+                            button.addClass("book-style");
+                            button.addClass("button-style");
+                            div.append(button);
+                            $(bookDiv).append(div);
+                        }
+                    });
+                }
+            }
+
+            //create an on click function, get value from the button attribute, and assign button value to wish list
+
+
+            //     function renderButton(lccnChildren) {
+            //         for (var i=0; i<lccnChildren.length;i++){
+            //         var buttons = $("<button>");
+            //         buttons.addClass("city-buttons");
+            //         buttons.attr("book-name", cities[i]);
+            //          buttons.html(cities[i]);
+            //         $("#cities-buttons").append(buttons);
+            // }
+            //     }
+
+            fetchWithLCCN(lccnChildren, "#book-box");
+            fetchWithLCCN(YA, "#youngadult-books");
+
+        });
+
     </script>
 
 
